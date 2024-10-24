@@ -3,7 +3,7 @@ package com.example.healthmonitor;
 import java.util.List;
 
 public abstract class PatientDecorator extends Patient{
-    Patient patient;
+    private Patient patient;
     public PatientDecorator(Patient patient){
         this.patient = patient;
     }
