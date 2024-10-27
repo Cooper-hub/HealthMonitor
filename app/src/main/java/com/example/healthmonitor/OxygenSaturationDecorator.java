@@ -1,6 +1,8 @@
 package com.example.healthmonitor;
 
-public class OxygenSaturationDecorator extends HealthMetricDecorator<Double>{
+import com.example.healthmonitor.decorators.HealthMetricDecorator;
+
+public class OxygenSaturationDecorator extends HealthMetricDecorator<Double> {
 
     public OxygenSaturationDecorator(Patient patient){
         super(patient);

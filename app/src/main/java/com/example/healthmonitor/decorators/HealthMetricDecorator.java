@@ -1,6 +1,8 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.decorators;
 
-public class HealthMetricDecorator<T> extends Patient{
+import com.example.healthmonitor.Patient;
+
+public class HealthMetricDecorator<T> extends Patient {
     private Patient patient;
     private T metricValue;  // A generic metric (like blood sugar, temperature, etc.)
 

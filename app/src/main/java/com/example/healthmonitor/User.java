@@ -5,27 +5,51 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class User {
-    // Basic Personal Information
     private String name;
-    private LocalDate dateOfBirth;
-    private String gender;
-    private int height;  // Measured in cm
-    private int weight;  // Measured in kg
     private String contactInformation;
+    private String password;
     private String emergencyContact;
+    private String address;
 
-    // Medical History
-    private List<String> chronicConditions;  // E.g., diabetes, hypertension
-    private List<String> allergies;  // E.g., food, medication, environmental
-    private List<String> medications;  // Name, dosage, frequency
-    private List<String> surgeries;  // Surgery descriptions with dates
-    private List<String> familyHistory;  // E.g., heart disease, cancer
-    private List<String> vaccinationRecords;
+    // Getters
+    public String getName() {
+        return name;
+    }
 
-    // Health Measurements
-    private String bloodPressure;  // E.g., 120/80
-    private int heartRate;  // Beats per minute
-    private double bloodSugar;  // In mg/dL
-    private double bodyTemperature;  // In Celsius
-    private double oxygenSaturation;  // SpO2 in percentage
+    public String getContactInformation() {
+        return contactInformation;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

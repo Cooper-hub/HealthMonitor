@@ -1,4 +1,6 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.decorators;
+
+import com.example.healthmonitor.Patient;
 
 public class BodyTemperatureDecorator extends HealthMetricDecorator<Double>{
     public BodyTemperatureDecorator(Patient patient){

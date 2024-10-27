@@ -1,10 +1,12 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.decorators;
+
+import com.example.healthmonitor.Patient;
 
 import java.util.List;
 
-public abstract class PatientDecorator extends Patient{
+public abstract class PatientInformationDecorator extends Patient {
     private Patient patient;
-    public PatientDecorator(Patient patient){
+    public PatientInformationDecorator(Patient patient){
         this.patient = patient;
     }
     // Medical History
