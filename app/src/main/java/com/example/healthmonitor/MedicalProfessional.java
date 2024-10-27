@@ -1,5 +1,7 @@
 package com.example.healthmonitor;
 
-interface MedicalProfessional {
-    void update(Patient patient);
+public class MedicalProfessional extends User implements IObserver{
+    public void update(String message) {
+
+    }
 }

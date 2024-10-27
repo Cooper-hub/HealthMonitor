@@ -1,5 +1,5 @@
 package com.example.healthmonitor;
 
 public interface IObserver {
-    void update(ISubject s);
+    void update(String notificationMessage);
 }
