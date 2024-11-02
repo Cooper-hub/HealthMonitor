@@ -1,6 +1,6 @@
 package com.example.healthmonitor;
 import android.content.Intent;
-
+import com.google.firebase.FirebaseApp;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,25 +21,22 @@ public class LoginActivity extends AppCompatActivity {
     protected EditText passwordEt;
     protected String email;
     protected String password;
-    private Button signupBtn;
-    private Button loginBtn;
-
-    private TextView resetPasswordTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseApp.initializeApp(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         emailEt = findViewById(R.id.Username);
         passwordEt = findViewById(R.id.Password);
 
-        signupBtn = findViewById(R.id.Registerbtn);
-        loginBtn = findViewById(R.id.Loginbtn);
+        Button signupBtn = findViewById(R.id.Registerbtn);
+        Button loginBtn = findViewById(R.id.Loginbtn);
 
         auth = FirebaseAuth.getInstance();
 
-        resetPasswordTv = findViewById(R.id.forgotPassword);
+        TextView resetPasswordTv = findViewById(R.id.forgotPassword);
 
         resetPasswordTv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -59,18 +56,21 @@ public class LoginActivity extends AppCompatActivity {
                         String username = emailEt.getText().toString();
 
                         String[] parts = username.split("@");
+                        Intent intent;
 
-                        //If it is an employee
-                        if (parts.length == 2 && parts[1].equals("mytru.ca")) {
-                            Toast.makeText(LoginActivity.this, "Successfully Logged In Employee", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        //if it is a manager
-                        if (parts.length == 2 && parts[1].equals("tru.ca")) {
-                            Toast.makeText(LoginActivity.this, "Successfully Logged In Manager", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        if (parts.length == 2) {
+                            String domain = parts[1];
+
+                            // If the email domain is hospital.ca, it's a medical professional
+                            if (domain.equals("hospital.ca")) {
+                                Toast.makeText(LoginActivity.this, "Successfully Logged In Medical Professional", Toast.LENGTH_LONG).show();
+                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                            }
+                            // If the email domain is anything else, it's a patient
+                            else {
+                                Toast.makeText(LoginActivity.this, "Successfully Logged In Employee", Toast.LENGTH_LONG).show();
+                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                            }
                             startActivity(intent);
                             finish();
                         }
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         signupBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
             finish();
         });
