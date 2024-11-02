@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "295440985637",
     "project_id": "healthmonitor-70fa3",
-    "storage_bucket": "healthmonitor-70fa3.appspot.com"
+    "storage_bucket": "healthmonitor-70fa3.firebasestorage.app"
   },
   "client": [
     {
