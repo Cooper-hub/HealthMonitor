@@ -1,7 +1,8 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.activities;
 
 import android.os.Bundle;
 
+import com.example.healthmonitor.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;

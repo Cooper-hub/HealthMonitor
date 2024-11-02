@@ -1,5 +1,7 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.activities;
 import android.content.Intent;
+
+import com.example.healthmonitor.R;
 import com.google.firebase.FirebaseApp;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -68,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             // If the email domain is anything else, it's a patient
                             else {
-                                Toast.makeText(LoginActivity.this, "Successfully Logged In Employee", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "Successfully Logged In Patient", Toast.LENGTH_LONG).show();
                                 intent = new Intent(LoginActivity.this, MainActivity.class);
                             }
                             startActivity(intent);

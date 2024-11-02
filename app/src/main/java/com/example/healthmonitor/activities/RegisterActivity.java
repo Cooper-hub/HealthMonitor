@@ -1,4 +1,4 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.healthmonitor.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -19,8 +20,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected EditText emailEt;
     protected EditText passwordEt;
 
-    public Button signUpBtn;
-    private Button loginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
         emailEt = findViewById(R.id.inputUsername);
         passwordEt = findViewById(R.id.inputPassword);
 
-        loginBtn = findViewById(R.id.alreadyHaveAccount);
-        signUpBtn = findViewById(R.id.Registerbtn);
+        Button loginBtn = findViewById(R.id.alreadyHaveAccount);
+        Button signUpBtn = findViewById(R.id.Registerbtn);
 
         signUpBtn.setOnClickListener(view -> {
             String email = emailEt.getText().toString();
