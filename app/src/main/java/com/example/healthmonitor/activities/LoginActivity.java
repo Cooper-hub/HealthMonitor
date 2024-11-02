@@ -66,12 +66,12 @@ public class LoginActivity extends AppCompatActivity {
                             // If the email domain is hospital.ca, it's a medical professional
                             if (domain.equals("hospital.ca")) {
                                 Toast.makeText(LoginActivity.this, "Successfully Logged In Medical Professional", Toast.LENGTH_LONG).show();
-                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent = new Intent(LoginActivity.this, HealthCareHomePage.class);
                             }
                             // If the email domain is anything else, it's a patient
                             else {
                                 Toast.makeText(LoginActivity.this, "Successfully Logged In Patient", Toast.LENGTH_LONG).show();
-                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent = new Intent(LoginActivity.this, PatientHomePage.class);
                             }
                             startActivity(intent);
                             finish();
