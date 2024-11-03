@@ -11,4 +11,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="view_live_data">View Live Data</string>
     <string name="request_help">Request Help</string>
+    <string name="view_patient_list_assign_monitor">View Patient List/Assign Monitor</string>
+    <string name="register_patient">Register Patient</string>
 </resources>

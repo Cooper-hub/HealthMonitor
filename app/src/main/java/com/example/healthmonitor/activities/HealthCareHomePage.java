@@ -1,13 +1,9 @@
 package com.example.healthmonitor.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.healthmonitor.R;
 
 public class HealthCareHomePage extends AppCompatActivity {
@@ -15,12 +11,18 @@ public class HealthCareHomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_health_care_home_page);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        setContentView(R.layout.activity_patient_home_page);
+        Button reg_patient_btn = findViewById(R.id.reg_patient_btn);
+        Button view_patients_btn = findViewById(R.id.view_patients_btn);
+
+        reg_patient_btn.setOnClickListener(view -> {
+            Intent intent = new Intent(HealthCareHomePage.this, HealthCareRegisterPatient.class);
+            startActivity(intent);
+        });
+
+        view_patients_btn.setOnClickListener(view -> {
+            Intent intent = new Intent(HealthCareHomePage.this, HealthCareViewPatientList.class);
+            startActivity(intent);
         });
     }
 }
