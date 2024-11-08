@@ -93,8 +93,8 @@
         android:id="@+id/Registerbtn"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:layout_marginTop="310dp"
         android:layout_marginStart="33dp"
+        android:layout_marginTop="212dp"
         android:layout_marginEnd="33dp"
         android:background="@drawable/input_bg"
         android:backgroundTint="@color/TRUTeal"
@@ -104,7 +104,6 @@
         android:textSize="14sp"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintEnd_toEndOf="@+id/patient_spinner"
-        app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintStart_toStartOf="@+id/patient_spinner"
         app:layout_constraintTop_toBottomOf="@+id/patient_spinner" />
 
@@ -193,6 +192,22 @@
         android:background="@drawable/input_bg"
         android:backgroundTint="@color/white"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="212dp"
+        android:layout_marginEnd="33dp"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="@color/TRUTeal"
+        android:shadowColor="@color/white"
+        android:text="Register"
+        android:textColor="@color/TRUBlue"
+        android:textSize="14sp"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/patient_spinner"
+        app:layout_constraintStart_toStartOf="@+id/patient_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/patient_spinner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

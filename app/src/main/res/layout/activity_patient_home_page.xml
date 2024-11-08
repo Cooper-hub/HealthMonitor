@@ -36,7 +36,7 @@
         android:layout_margin="16dp"
         android:background="@drawable/input_bg"
         android:shadowColor="@color/white"
-        android:textColor="@color/TRUBlue"
+        android:textColor="@color/white"
         android:backgroundTint="@color/TRUTeal"
         android:text="@string/view_live_data"
         android:textSize="24sp"

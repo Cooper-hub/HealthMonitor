@@ -11,7 +11,7 @@ public class HealthCareHomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_home_page);
+        setContentView(R.layout.activity_health_care_home_page);
         Button reg_patient_btn = findViewById(R.id.reg_patient_btn);
         Button view_patients_btn = findViewById(R.id.view_patients_btn);
 

@@ -28,7 +28,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_health_care_register_patient);
 
         auth = FirebaseAuth.getInstance();
 
