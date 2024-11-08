@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.HealthCareRegisterPatient"
-    android:background="@color/TRUBlue">
+    android:background="@color/TRUBlue"
+    tools:context=".activities.HealthCareRegisterPatient">
 
     <TextView
         android:id="@+id/registerTitle"
@@ -90,29 +90,28 @@
         app:layout_constraintTop_toBottomOf="@+id/inputPassword" />
 
     <Button
-        android:id="@+id/Registerbtn"
+        android:id="@+id/registerBtn"
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_marginStart="33dp"
-        android:layout_marginTop="212dp"
+        android:layout_marginTop="33dp"
         android:layout_marginEnd="33dp"
         android:background="@drawable/input_bg"
-        android:backgroundTint="@color/TRUTeal"
+        app:backgroundTint="@color/white"
         android:shadowColor="@color/white"
         android:text="Register"
         android:textColor="@color/TRUBlue"
         android:textSize="14sp"
-        app:backgroundTint="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="@+id/patient_spinner"
-        app:layout_constraintStart_toStartOf="@+id/patient_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/patient_spinner" />
+        app:layout_constraintEnd_toEndOf="@+id/monitorSpinner"
+        app:layout_constraintStart_toStartOf="@+id/monitorSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/monitorSpinner" />
 
     <TextView
-        android:id="@+id/PatientInfoText"
+        android:id="@+id/patientInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter Patient Information"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -122,22 +121,22 @@
         app:layout_constraintVertical_bias="0.053" />
 
     <Spinner
-        android:id="@+id/patient_spinner"
+        android:id="@+id/patientSpinner"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:padding="16dp"
         android:layout_marginStart="33dp"
         android:layout_marginEnd="33dp"
+        android:padding="16dp"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/PatientInfoText"
+        app:layout_constraintTop_toBottomOf="@id/patientInfoText"
         app:layout_constraintVertical_bias="0.066"
-        app:layout_constraintWidth_percent="0.5"
-        android:background="@drawable/input_bg"
-        android:backgroundTint="@color/white"/>
+        app:layout_constraintWidth_percent="0.5" />
 
     <EditText
         android:id="@+id/patientInfoInput"
@@ -153,13 +152,13 @@
         android:paddingBottom="10dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="@+id/patient_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/patientSpinner"
         app:layout_constraintHorizontal_bias="0.7"
-        app:layout_constraintStart_toStartOf="@+id/patient_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/patient_spinner" />
+        app:layout_constraintStart_toStartOf="@+id/patientSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/patientSpinner" />
 
     <TextView
-        android:id="@+id/MonitorText"
+        android:id="@+id/monitorText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -175,39 +174,38 @@
         app:layout_constraintVertical_bias="0.058" />
 
     <Spinner
-        android:id="@+id/monitor_spinner"
+        android:id="@+id/monitorSpinner"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:padding="16dp"
         android:layout_marginStart="33dp"
-        android:layout_marginEnd="120dp"
+        android:layout_marginEnd="140dp"
+        android:padding="16dp"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/MonitorText"
+        app:layout_constraintTop_toBottomOf="@id/monitorText"
         app:layout_constraintVertical_bias="0.066"
-        app:layout_constraintWidth_percent="0.5"
-        android:background="@drawable/input_bg"
-        android:backgroundTint="@color/white"/>
+        app:layout_constraintWidth_percent="0.5" />
 
     <Button
-        android:layout_width="match_parent"
+        android:id="@+id/setMonitorBtn"
+        android:layout_width="100dp"
         android:layout_height="62dp"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="212dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="33dp"
         android:background="@drawable/input_bg"
-        android:backgroundTint="@color/TRUTeal"
+        app:backgroundTint="@color/white"
+        android:padding="16dp"
         android:shadowColor="@color/white"
-        android:text="Register"
+        android:text="add"
         android:textColor="@color/TRUBlue"
         android:textSize="14sp"
-        app:backgroundTint="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="@+id/patient_spinner"
-        app:layout_constraintStart_toStartOf="@+id/patient_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/patient_spinner" />
-
+        app:layout_constraintStart_toEndOf="@+id/monitorSpinner"
+        app:layout_constraintTop_toBottomOf="@id/monitorText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -86,7 +86,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/input_bg"
-        android:backgroundTint="@color/TRUTeal"
         android:text="Log in"
         android:textColor="@color/TRUBlue"
         app:backgroundTint="@color/white"
