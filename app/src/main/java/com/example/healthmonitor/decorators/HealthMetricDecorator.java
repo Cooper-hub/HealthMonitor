@@ -7,14 +7,14 @@ import com.example.healthmonitor.Patient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HealthMetricDecorator<T> extends Patient implements ISubject {
-    private Patient patient;
+public class HealthMetricDecorator<T> extends PatientDecorator implements ISubject {
+    public PatientDecorator decoratedPatient;
     private T metricValue;  // A generic metric (like blood sugar, temperature, etc.)
 
     private final List<IObserver> observers = new ArrayList<>();
 
-    public HealthMetricDecorator(Patient patient) {
-        this.patient = patient;
+    public HealthMetricDecorator(PatientDecorator decoratedPatient) {
+        super(decoratedPatient);
     }
 
     // Setter for the metric value

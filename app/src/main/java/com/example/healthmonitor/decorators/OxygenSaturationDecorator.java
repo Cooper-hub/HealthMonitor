@@ -5,8 +5,8 @@ import com.example.healthmonitor.decorators.HealthMetricDecorator;
 
 public class OxygenSaturationDecorator extends HealthMetricDecorator<Double> {
 
-    public OxygenSaturationDecorator(Patient patient){
-        super(patient);
+    public OxygenSaturationDecorator(PatientDecorator decoratedPatient){
+        super(decoratedPatient);
     }
 
     public String getHeartRateInfo() {

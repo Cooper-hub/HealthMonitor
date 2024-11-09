@@ -4,8 +4,8 @@ import com.example.healthmonitor.Patient;
 
 public class BloodPressureDecorator extends HealthMetricDecorator<String>{
 
-    public BloodPressureDecorator(Patient patient){
-        super(patient);
+    public BloodPressureDecorator(PatientDecorator decoratedPatient){
+       super(decoratedPatient);
     }
     public String getBloodSugarInfo() {
         return "Blood Pressure: " + getMetricValue() + " mmHg";

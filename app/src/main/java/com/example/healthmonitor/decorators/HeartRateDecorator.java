@@ -4,8 +4,8 @@ import com.example.healthmonitor.Patient;
 
 public class HeartRateDecorator extends HealthMetricDecorator<Integer>{
 
-    public HeartRateDecorator(Patient patient){
-        super(patient);
+    public HeartRateDecorator(PatientDecorator decoratedPatient){
+        super(decoratedPatient);
     }
     // add stuff for when we add a heart rate monitor
     public String getBloodSugarInfo() {
