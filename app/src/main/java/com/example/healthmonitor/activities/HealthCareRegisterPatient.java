@@ -35,6 +35,8 @@ import com.example.healthmonitor.decorators.PatientInformationDecorator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -80,11 +82,13 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         // Populate spinner with field names from PatientInformationDecorator
         populatePatientSpinner();
         populateMonitorSpinner();
+
         registerBtn.setOnClickListener(view -> {
             if (TextUtils.isEmpty(emailEt.getText().toString()) || TextUtils.isEmpty(passwordEt.getText().toString())) {
                 Toast.makeText(HealthCareRegisterPatient.this, "Please fill username and password", Toast.LENGTH_LONG).show();
             } else {
                 String userId = emailEt.getText().toString();
+
                 // Create a map to store patient data
                 Map<String, Object> patientData = new HashMap<>();
                 PatientInformationDecorator patientInfoDecorator = unwrapDecorator(decoratedPatient, PatientInformationDecorator.class);
@@ -100,11 +104,20 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
                     throw new IllegalStateException("PatientInformationDecorator not found in decorator chain.");
                 }
 
+                WriteBatch batch = db.batch();
 
-                // Push the HealthProfile data to Firestore
-                db.collection("users").document(userId).set(patientData)
-                        .addOnSuccessListener(aVoid -> Log.d("Firestore", "Health profile successfully written!"))
-                        .addOnFailureListener(e -> Log.w("Firestore", "Error writing health profile", e));
+                // Prepare your write operations
+                DocumentReference docRef1 = db.collection("users").document(userId);
+                batch.set(docRef1, patientData);
+
+                // Commit the batch to push data to Firestore immediately
+                batch.commit()
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("Firestore", "Batch commit successful");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("Firestore", "Batch commit failed", e);
+                        });
 
                 auth.createUserWithEmailAndPassword(emailEt.getText().toString(), passwordEt.getText().toString()).addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
