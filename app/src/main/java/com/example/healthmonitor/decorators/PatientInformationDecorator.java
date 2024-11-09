@@ -4,7 +4,7 @@ import com.example.healthmonitor.Patient;
 
 import java.util.List;
 
-public abstract class PatientInformationDecorator extends Patient {
+public class PatientInformationDecorator extends Patient {
     private Patient patient;
     public PatientInformationDecorator(Patient patient){
         this.patient = patient;

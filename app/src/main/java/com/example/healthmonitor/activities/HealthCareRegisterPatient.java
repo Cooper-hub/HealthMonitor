@@ -1,18 +1,28 @@
 package com.example.healthmonitor.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.AdapterView;
 import android.widget.Toast;
+
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.healthmonitor.R;
 import com.example.healthmonitor.Patient;
+import com.example.healthmonitor.decorators.BloodPressureDecorator;
+import com.example.healthmonitor.decorators.BloodSugarDecorator;
+import com.example.healthmonitor.decorators.BodyTemperatureDecorator;
+import com.example.healthmonitor.decorators.HealthMetricDecorator;
+import com.example.healthmonitor.decorators.HeartRateDecorator;
+import com.example.healthmonitor.decorators.OxygenSaturationDecorator;
 import com.example.healthmonitor.decorators.PatientInformationDecorator;
 
 import java.lang.reflect.Method;
@@ -24,10 +34,13 @@ import java.util.HashMap;
 public class HealthCareRegisterPatient extends AppCompatActivity {
 
     private EditText emailEt, passwordEt, confirmPasswordEt, patientInfoEt;
-    private Spinner patientSpinner;
-    private PatientInformationDecorator patientInfoDecorator;
+    private Spinner patientSpinner, monitorSpinner;
+    private Button setMonitorBtn;
+    private Patient basePatient = new Patient();
     private String selectedField;
     private Map<String, Method> setterMethodMap;
+
+    private String selectedDecorator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +54,19 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         patientInfoEt = findViewById(R.id.patientInfoInput);
         patientSpinner = findViewById(R.id.patientSpinner);
 
+        monitorSpinner = findViewById(R.id.monitorSpinner);
+        setMonitorBtn = findViewById(R.id.setMonitorBtn);
+
+
         // Initialize patient decorator
-        Patient basePatient = new Patient();
-        patientInfoDecorator = new PatientInformationDecorator(basePatient) {
-        };
+        basePatient = new PatientInformationDecorator(basePatient);
 
         // Initialize setter method map
         setterMethodMap = new HashMap<>();
 
         // Populate spinner with field names from PatientInformationDecorator
         populatePatientSpinner();
-
-
+        populateMonitorSpinner();
     }
 
     private void populatePatientSpinner() {
@@ -90,6 +104,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
                     patientInfoEt.setText(""); // Clear the EditText after saving
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 patientInfoEt.setText("");
@@ -119,17 +134,13 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
                 Toast.makeText(this, "Please enter a value", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // Get the corresponding setter method for the selected field (using unformatted field name)
             Method setter = setterMethodMap.get(selectedField);
 
-            // Debugging: Show the setter method being called
             if (setter != null) {
-                Toast.makeText(this, "Calling setter: " + setter.getName(), Toast.LENGTH_SHORT).show();
 
-                // Convert the value to the correct type and invoke the setter
-                setter.invoke(patientInfoDecorator, convertValue(inputValue, setter.getParameterTypes()[0]));
+                // Convert the value to the correct type and invoke the setter of basePatient
 
+                setter.invoke(basePatient, convertValue(inputValue, setter.getParameterTypes()[0]));
                 // Display a toast with the field name and the saved value
                 Toast.makeText(this, "Saved " + selectedField + ": " + inputValue, Toast.LENGTH_SHORT).show();
             } else {
@@ -140,8 +151,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
             Toast.makeText(this, "Error saving value for " + selectedField, Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
 
     private Object convertValue(String inputValue, Class<?> fieldType) {
@@ -161,5 +170,56 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         }
         // Add more conversions as needed
         return null;
+    }
+
+    private void populateMonitorSpinner() {
+        List<String> monitorNames = new ArrayList<>();
+        List<Class<?>> decoratorClasses = getDecoratorClasses();
+        for (Class<?> decoratorClass : decoratorClasses)
+        {
+            monitorNames.add(decoratorClass.getSimpleName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, monitorNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        monitorSpinner.setAdapter(adapter);
+        monitorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                selectedDecorator = monitorNames.get(position);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent)
+            {
+                selectedDecorator = null;
+            } });
+        setMonitorBtn.setOnClickListener(view -> {
+            if (selectedDecorator != null) {
+                try {
+                    Class<?> selectedDecoratorClass = decoratorClasses.get(monitorNames.indexOf(selectedDecorator));
+                    Constructor<?> constructor = selectedDecoratorClass.getConstructor(Patient.class);
+                    basePatient = (Patient) constructor.newInstance(basePatient);
+                    Toast.makeText(HealthCareRegisterPatient.this, "Added monitor: " + selectedDecorator, Toast.LENGTH_SHORT).show();
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(HealthCareRegisterPatient.this, "Error adding monitor", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(HealthCareRegisterPatient.this, "No monitor selected", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private List<Class<?>> getDecoratorClasses() {
+        List<Class<?>> decoratorClasses = new ArrayList<>();
+        // Add the decorator classes manually to the list
+        decoratorClasses.add(BloodPressureDecorator.class);
+        decoratorClasses.add(BloodSugarDecorator.class);
+        decoratorClasses.add(BodyTemperatureDecorator.class);
+        decoratorClasses.add(HeartRateDecorator.class);
+        decoratorClasses.add(OxygenSaturationDecorator.class);
+        return decoratorClasses;
     }
 }
