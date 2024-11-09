@@ -1,13 +1,15 @@
 package com.example.healthmonitor.decorators;
 
-import com.example.healthmonitor.Patient;
+import com.example.healthmonitor.activities.IPatient;
+import com.example.healthmonitor.decorators.PatientDecorator;
 
-public class BloodPressureDecorator extends HealthMetricDecorator<String>{
+public class BloodPressureDecorator extends PatientDecorator {
 
-    public BloodPressureDecorator(PatientDecorator decoratedPatient){
-       super(decoratedPatient);
+    String bloodPressure;
+    public BloodPressureDecorator(IPatient patient){
+       super(patient);
     }
-    public String getBloodSugarInfo() {
-        return "Blood Pressure: " + getMetricValue() + " mmHg";
+    public String getValue() {
+        return patient.getValue() + "BloodPressure: "+ bloodPressure;
     }
 }

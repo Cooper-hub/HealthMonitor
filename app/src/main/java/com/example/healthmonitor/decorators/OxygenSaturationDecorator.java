@@ -1,17 +1,15 @@
 package com.example.healthmonitor.decorators;
 
-import com.example.healthmonitor.Patient;
-import com.example.healthmonitor.decorators.HealthMetricDecorator;
+import com.example.healthmonitor.activities.IPatient;
+import com.example.healthmonitor.decorators.PatientDecorator;
 
-public class OxygenSaturationDecorator extends HealthMetricDecorator<Double> {
+public class OxygenSaturationDecorator extends PatientDecorator {
 
-    public OxygenSaturationDecorator(PatientDecorator decoratedPatient){
-        super(decoratedPatient);
+    String oxygenSaturation;
+    public OxygenSaturationDecorator(IPatient patient){
+        super(patient);
     }
-
-    public String getHeartRateInfo() {
-        return "Oxygen Saturation: " + getMetricValue() + "%";
+    public String getValue() {
+        return patient.getValue() + "OxygenSaturation " + oxygenSaturation;
     }
-
-    // add stuff for when we add a O2 saturation monitor
 }

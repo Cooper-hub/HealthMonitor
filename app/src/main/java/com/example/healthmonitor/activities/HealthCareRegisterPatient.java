@@ -13,15 +13,11 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.healthmonitor.decorators.PatientDecorator;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 
 import com.example.healthmonitor.R;
@@ -35,7 +31,6 @@ import com.example.healthmonitor.decorators.PatientInformationDecorator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.lang.reflect.Method;
@@ -44,13 +39,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public class HealthCareRegisterPatient extends AppCompatActivity {
 
+
+public class HealthCareRegisterPatient extends AppCompatActivity {
     private EditText emailEt, passwordEt, confirmPasswordEt, patientInfoEt;
     private Spinner patientSpinner, monitorSpinner;
     private Button setMonitorBtn, registerBtn;
-    private Patient basePatient = new Patient();
-    private PatientDecorator decoratedPatient= new PatientDecorator(basePatient);
+    private IPatient patient = new PatientDecorator(new Patient());
 
     private String selectedField;
     private Map<String, Method> setterMethodMap;
@@ -61,7 +56,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_health_care_register_patient);
-
         // Initialize UI components
         emailEt = findViewById(R.id.inputUsername);
         passwordEt = findViewById(R.id.inputPassword);
@@ -78,63 +72,55 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
 
         // Initialize setter method map
         setterMethodMap = new HashMap<>();
-        decoratedPatient= new PatientInformationDecorator(decoratedPatient);
         // Populate spinner with field names from PatientInformationDecorator
         populatePatientSpinner();
         populateMonitorSpinner();
 
+        patient = new PatientInformationDecorator(patient);
         registerBtn.setOnClickListener(view -> {
             if (TextUtils.isEmpty(emailEt.getText().toString()) || TextUtils.isEmpty(passwordEt.getText().toString())) {
                 Toast.makeText(HealthCareRegisterPatient.this, "Please fill username and password", Toast.LENGTH_LONG).show();
             } else {
-                String userId = emailEt.getText().toString();
+                String email = emailEt.getText().toString();
+                String password = passwordEt.getText().toString();
 
-                // Create a map to store patient data
-                Map<String, Object> patientData = new HashMap<>();
-                PatientInformationDecorator patientInfoDecorator = unwrapDecorator(decoratedPatient, PatientInformationDecorator.class);
-                if (patientInfoDecorator != null) {
-                    patientData.put("chronicConditions", patientInfoDecorator.getChronicConditions());
-                    patientData.put("allergies", patientInfoDecorator.getAllergies());
-                    patientData.put("medications", patientInfoDecorator.getMedications());
-                    patientData.put("surgeries", patientInfoDecorator.getSurgeries());
-                    patientData.put("familyHistory", patientInfoDecorator.getFamilyHistory());
-                    patientData.put("vaccinationRecords", patientInfoDecorator.getVaccinationRecords());
-                } else {
-                    // Handle case where PatientInformationDecorator is not found
-                    throw new IllegalStateException("PatientInformationDecorator not found in decorator chain.");
-                }
-
-                WriteBatch batch = db.batch();
-
-                // Prepare your write operations
-                DocumentReference docRef1 = db.collection("users").document(userId);
-                batch.set(docRef1, patientData);
-
-                // Commit the batch to push data to Firestore immediately
-                batch.commit()
-                        .addOnSuccessListener(aVoid -> {
-                            Log.d("Firestore", "Batch commit successful");
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.e("Firestore", "Batch commit failed", e);
-                        });
-
-                auth.createUserWithEmailAndPassword(emailEt.getText().toString(), passwordEt.getText().toString()).addOnCompleteListener(this, task -> {
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
+
+                        // Use the authenticated user's unique UID
+                        String userId = auth.getCurrentUser().getUid();
+                        // Data to be saved in Firestore
+                        Map<String, String> patientData = new HashMap<>();
+                        patientData.put("fullData", patient.getValue());
+
+                        WriteBatch batch = db.batch();
+                        DocumentReference docRef1 = db.collection("users").document(userId);
+                        batch.set(docRef1, patientData);
+
+                        // Commit the batch to Firestore
+                        batch.commit()
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("Firestore", "Batch commit successful");
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Batch commit failed", e);
+                                    Toast.makeText(HealthCareRegisterPatient.this, "Error saving data", Toast.LENGTH_LONG).show();
+                                });
+
                         Intent intent = new Intent(this, HealthCareHomePage.class);
                         startActivity(intent);
                         finish();
+
                     } else {
                         Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show();
                     }
                 });
             }
         });
-
     }
 
-    private void populatePatientSpinner() {
+        private void populatePatientSpinner() {
         List<String> fieldNames = new ArrayList<>();
 
         // Get all setter methods from PatientInformationDecorator
@@ -205,7 +191,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
 
                 // Convert the value to the correct type and invoke the setter of basePatient
 
-                setter.invoke(decoratedPatient, convertValue(inputValue, setter.getParameterTypes()[0]));
+                setter.invoke(patient, convertValue(inputValue, setter.getParameterTypes()[0]));
                 // Display a toast with the field name and the saved value
                 Toast.makeText(this, "Saved " + selectedField + ": " + inputValue, Toast.LENGTH_SHORT).show();
             } else {
@@ -259,20 +245,16 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         setMonitorBtn.setOnClickListener(view -> {
             if (selectedDecorator != null) {
                 try {
-                  // Utilizing the decorator pattern to decorate the basePatient with monitors
+                    // Get the selected decorator class
                     Class<?> selectedDecoratorClass = decoratorClasses.get(monitorNames.indexOf(selectedDecorator));
-                    Constructor<?> constructor = selectedDecoratorClass.getConstructor(PatientDecorator.class);
-                    decoratedPatient = (PatientDecorator) constructor.newInstance(decoratedPatient);
-
+                    Constructor<?> constructor = selectedDecoratorClass.getConstructor(IPatient.class);
+                    patient = (IPatient) constructor.newInstance(patient);
                     Toast.makeText(HealthCareRegisterPatient.this, "Added monitor: " + selectedDecorator, Toast.LENGTH_SHORT).show();
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(HealthCareRegisterPatient.this, "Error adding monitor", Toast.LENGTH_SHORT).show();
                 }
-            }
-            else
-            {
+            } else {
                 Toast.makeText(HealthCareRegisterPatient.this, "No monitor selected", Toast.LENGTH_SHORT).show();
             }
         });
@@ -286,22 +268,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         decoratorClasses.add(HeartRateDecorator.class);
         decoratorClasses.add(OxygenSaturationDecorator.class);
         return decoratorClasses;
-    }
-    public static <T> T unwrapDecorator(Object decoratedPatient, Class<T> targetDecoratorClass) {
-        while (decoratedPatient != null) {
-            // Check if the current layer is of the target type
-            if (targetDecoratorClass.isInstance(decoratedPatient)) {
-                return targetDecoratorClass.cast(decoratedPatient);
-            }
-
-            // If this object is a PatientDecorator, unwrap it further
-            if (decoratedPatient instanceof PatientDecorator) {
-                decoratedPatient = ((PatientDecorator) decoratedPatient).getDecoratedPatient();
-            } else {
-                break;  // Exit if we can't unwrap further
-            }
-        }
-        return null; // Target decorator type not found
     }
 
 }

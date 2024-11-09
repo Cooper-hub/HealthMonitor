@@ -1,14 +1,17 @@
 package com.example.healthmonitor.decorators;
 
-import com.example.healthmonitor.Patient;
+import com.example.healthmonitor.activities.IPatient;
+import com.example.healthmonitor.decorators.PatientDecorator;
 
-public class BloodSugarDecorator extends HealthMetricDecorator<Double>{
+public class BloodSugarDecorator extends PatientDecorator {
 
-    public BloodSugarDecorator(PatientDecorator decoratedPatient){
-        super(decoratedPatient);
+    String bloodSugar;
+    public BloodSugarDecorator(IPatient patient){
+        super(patient);
     }
-    // add stuff for when we add a blood sugar monitor
-    public String getBloodSugarInfo() {
-        return "Blood Sugar: " + getMetricValue() + " mg/dL";
+
+    @Override
+    public String getValue() {
+        return patient.getValue() + "BloodSugar: " + bloodSugar;
     }
 }

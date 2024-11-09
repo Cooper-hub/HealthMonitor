@@ -1,12 +1,13 @@
 package com.example.healthmonitor;
 
+import com.example.healthmonitor.activities.IPatient;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Patient extends User{
+public class Patient extends User implements IPatient{
     // Basic personal information collected from BC service card
-
     private LocalDate dateOfBirth;
     private String gender;
     private float height;  // Measured in cm
@@ -50,6 +51,10 @@ public class Patient extends User{
     // Setter for weight
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    public String getValue() {
+        return "Patient Info: " + "DateOfBirth: " + dateOfBirth + " Gender: " + gender + " Height: " + height + " Weight: " + weight;
     }
 }
 

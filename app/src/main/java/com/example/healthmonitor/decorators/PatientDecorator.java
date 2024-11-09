@@ -1,13 +1,15 @@
 package com.example.healthmonitor.decorators;
 
 import com.example.healthmonitor.Patient;
+import com.example.healthmonitor.activities.IPatient;
 
-public class PatientDecorator extends Patient {
-    public Patient patient;
-    public PatientDecorator(Patient patient) {
+public class PatientDecorator implements IPatient {
+    public IPatient patient;
+    public PatientDecorator(IPatient patient) {
         this.patient = patient;
     }
-    public Patient getDecoratedPatient() {
-        return patient;
+
+    public String getValue(){
+        return patient.getValue();
     }
 }
