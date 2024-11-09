@@ -8,8 +8,9 @@
     android:layout_height="match_parent"
     tools:context=".activities.HealthCareHomePage">
 
+    <!-- Register Patient Button -->
     <Button
-        android:id="@+id/reg_patient_btn"
+        android:id="@+id/regPatientBtn"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
@@ -19,28 +20,50 @@
         android:text="@string/register_patient"
         android:textColor="@color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_patients_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.2"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintHeight_percent="0.2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintBottom_toTopOf="@id/unRegPatientBtn" />
+
+    <!-- Unregister Patient Button -->
     <Button
-        android:id="@+id/view_patients_btn"
+        android:id="@+id/unRegPatientBtn"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
         android:background="@drawable/input_bg"
-        android:shadowColor="@color/white"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/TRUTeal"
-        android:text="@string/view_patient_list_assign_monitor"
-        android:textSize="24sp"
         android:padding="24dp"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintHeight_percent="0.2"
-        app:layout_constraintTop_toBottomOf="@id/reg_patient_btn"
+        android:shadowColor="@color/white"
+        android:text="Unregister Patients"
+        android:textColor="@color/white"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintTop_toBottomOf="@id/regPatientBtn"
+        app:layout_constraintBottom_toTopOf="@id/viewPatientsBtn" />
+
+    <!-- View Patients Button -->
+    <Button
+        android:id="@+id/viewPatientsBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="@color/TRUTeal"
+        android:padding="24dp"
+        android:shadowColor="@color/white"
+        android:text="@string/view_patient_list_assign_monitor"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintTop_toBottomOf="@id/unRegPatientBtn"
         app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

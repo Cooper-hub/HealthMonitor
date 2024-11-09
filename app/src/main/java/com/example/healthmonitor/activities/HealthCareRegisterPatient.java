@@ -273,7 +273,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         decoratorClasses.add(OxygenSaturationDecorator.class);
         return decoratorClasses;
     }
-
 }
 
 
