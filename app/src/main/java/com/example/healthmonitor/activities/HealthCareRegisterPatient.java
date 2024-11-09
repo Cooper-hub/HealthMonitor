@@ -1,6 +1,8 @@
 package com.example.healthmonitor.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,16 +16,17 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.FirebaseApp;
 
 import com.example.healthmonitor.R;
 import com.example.healthmonitor.Patient;
 import com.example.healthmonitor.decorators.BloodPressureDecorator;
 import com.example.healthmonitor.decorators.BloodSugarDecorator;
 import com.example.healthmonitor.decorators.BodyTemperatureDecorator;
-import com.example.healthmonitor.decorators.HealthMetricDecorator;
 import com.example.healthmonitor.decorators.HeartRateDecorator;
 import com.example.healthmonitor.decorators.OxygenSaturationDecorator;
 import com.example.healthmonitor.decorators.PatientInformationDecorator;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -35,13 +38,13 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
 
     private EditText emailEt, passwordEt, confirmPasswordEt, patientInfoEt;
     private Spinner patientSpinner, monitorSpinner;
-    private Button setMonitorBtn;
+    private Button setMonitorBtn, registerBtn;
     private Patient basePatient = new Patient();
     private String selectedField;
     private Map<String, Method> setterMethodMap;
 
     private String selectedDecorator;
-
+    public FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +59,8 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
 
         monitorSpinner = findViewById(R.id.monitorSpinner);
         setMonitorBtn = findViewById(R.id.setMonitorBtn);
-
+        registerBtn = findViewById(R.id.registerBtn);
+        auth = FirebaseAuth.getInstance();
 
         // Initialize patient decorator
         basePatient = new PatientInformationDecorator(basePatient);
@@ -67,6 +71,23 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         // Populate spinner with field names from PatientInformationDecorator
         populatePatientSpinner();
         populateMonitorSpinner();
+
+        registerBtn.setOnClickListener(view -> {
+            if (TextUtils.isEmpty(emailEt.getText().toString()) || TextUtils.isEmpty(passwordEt.getText().toString())) {
+                Toast.makeText(HealthCareRegisterPatient.this, "Please fill username and password", Toast.LENGTH_LONG).show();
+            } else {
+                auth.createUserWithEmailAndPassword(emailEt.getText().toString(), passwordEt.getText().toString()).addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(this, HealthCareHomePage.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
     }
 
     private void populatePatientSpinner() {
@@ -195,6 +216,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         setMonitorBtn.setOnClickListener(view -> {
             if (selectedDecorator != null) {
                 try {
+//                   // Utilizing the decorator pattern to decorate the basePatient with monitors
                     Class<?> selectedDecoratorClass = decoratorClasses.get(monitorNames.indexOf(selectedDecorator));
                     Constructor<?> constructor = selectedDecoratorClass.getConstructor(Patient.class);
                     basePatient = (Patient) constructor.newInstance(basePatient);
