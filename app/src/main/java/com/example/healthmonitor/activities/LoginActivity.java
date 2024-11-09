@@ -2,6 +2,7 @@ package com.example.healthmonitor.activities;
 import android.content.Intent;
 
 import com.example.healthmonitor.R;
+import com.example.healthmonitor.User;
 import com.google.firebase.FirebaseApp;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     public FirebaseAuth auth;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public static User loggedInUser = new User();
     protected EditText emailEt;
     protected EditText passwordEt;
     protected String email;
@@ -47,8 +48,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginBtn.setOnClickListener(view -> {
+
             email = emailEt.getText().toString();
             password = passwordEt.getText().toString();
+
+            loggedInUser.setContactInformation(email);
+            loggedInUser.setPassword(password);
+
 
             if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                 Toast.makeText(LoginActivity.this, "Please fill all the fields", Toast.LENGTH_LONG).show();

@@ -1,5 +1,7 @@
 package com.example.healthmonitor.activities;
 
+import static com.example.healthmonitor.activities.LoginActivity.loggedInUser;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +24,7 @@ import com.google.firebase.FirebaseApp;
 
 import com.example.healthmonitor.R;
 import com.example.healthmonitor.Patient;
+import com.example.healthmonitor.activities.LoginActivity;
 import com.example.healthmonitor.decorators.BloodPressureDecorator;
 import com.example.healthmonitor.decorators.BloodSugarDecorator;
 import com.example.healthmonitor.decorators.BodyTemperatureDecorator;
@@ -51,6 +54,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
     private Map<String, Method> setterMethodMap;
     private String selectedDecorator;
     public FirebaseAuth auth;
+
     public FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +91,13 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
-
                         // Use the authenticated user's unique UID
-                        String userId = auth.getCurrentUser().getUid();
+                        String userId = auth.getCurrentUser().getEmail();
                         // Data to be saved in Firestore
                         Map<String, String> patientData = new HashMap<>();
-                        patientData.put("fullData", patient.getValue());
 
+                        patientData.put("fullData", patient.getValue());
+                        patientData.put("healthcareWorker",loggedInUser.getContactInformation());
                         WriteBatch batch = db.batch();
                         DocumentReference docRef1 = db.collection("users").document(userId);
                         batch.set(docRef1, patientData);
