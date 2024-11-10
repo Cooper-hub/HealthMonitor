@@ -14,7 +14,7 @@
         android:theme="@style/Theme.HealthMonitor"
         tools:targetApi="31">
         <activity
-            android:name=".HealthCarePatientUnregister"
+            android:name=".activities.HealthCarePatientUnregister"
             android:exported="false" />
         <activity
             android:name=".HealthCareWorkerUnregisterPatient"

@@ -54,7 +54,7 @@ public class Patient extends User implements IPatient{
     }
 
     public String getValue() {
-        return "Patient Info: " + "DateOfBirth: " + dateOfBirth + " Gender: " + gender + " Height: " + height + " Weight: " + weight;
+        return "Patient Info: " + "DateOfBirth: " + dateOfBirth + " Gender: " + gender + " Height: " + height + " Weight: " + weight + " ";
     }
 }
 

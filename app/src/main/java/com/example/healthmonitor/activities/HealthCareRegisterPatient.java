@@ -33,6 +33,7 @@ import com.example.healthmonitor.decorators.OxygenSaturationDecorator;
 import com.example.healthmonitor.decorators.PatientInformationDecorator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -87,12 +88,12 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
             } else {
                 String email = emailEt.getText().toString();
                 String password = passwordEt.getText().toString();
-
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
                         // Use the authenticated user's unique UID
                         String userId = auth.getCurrentUser().getEmail();
+
                         // Data to be saved in Firestore
                         Map<String, String> patientData = new HashMap<>();
 
@@ -106,6 +107,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
                         batch.commit()
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("Firestore", "Batch commit successful");
+                                    addPatientToHealthCareWorker();
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("Firestore", "Batch commit failed", e);
@@ -272,6 +274,21 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         decoratorClasses.add(HeartRateDecorator.class);
         decoratorClasses.add(OxygenSaturationDecorator.class);
         return decoratorClasses;
+    }
+    private void addPatientToHealthCareWorker() {
+        String patientEmail = emailEt.getText().toString();
+
+        // Update the selected patient's document to add the patient to the "patients" array
+        db.collection("users")
+                .document(loggedInUser.getContactInformation())  // Healthcare worker's document
+                .update("patients", FieldValue.arrayUnion(patientEmail))  // Add patientEmail to the patients array
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(HealthCareRegisterPatient.this, "Patient now being observed", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    e.printStackTrace();
+                });
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.healthmonitor;
+package com.example.healthmonitor.activities;
 
 import static com.example.healthmonitor.activities.LoginActivity.loggedInUser;
 
@@ -15,9 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.healthmonitor.activities.HealthCareHomePage;
-import com.example.healthmonitor.activities.PatientDataDisplay;
-import com.example.healthmonitor.activities.PatientHomePage;
+import com.example.healthmonitor.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
