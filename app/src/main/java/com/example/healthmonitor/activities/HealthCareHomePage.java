@@ -28,7 +28,7 @@ public class HealthCareHomePage extends AppCompatActivity {
         });
 
         viewPatientsBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(HealthCareHomePage.this, HealthCareViewPatientList.class);
+            Intent intent = new Intent(HealthCareHomePage.this, HealthCarePatientInformation.class);
             startActivity(intent);
         });
     }

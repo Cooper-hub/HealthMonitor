@@ -14,10 +14,10 @@
         android:theme="@style/Theme.HealthMonitor"
         tools:targetApi="31">
         <activity
-            android:name=".activities.HealthCarePatientUnregister"
+            android:name=".activities.HealthCarePatientInformation"
             android:exported="false" />
         <activity
-            android:name=".HealthCareWorkerUnregisterPatient"
+            android:name=".activities.HealthCarePatientUnregister"
             android:exported="false" />
         <activity
             android:name=".activities.HealthCareGraphs"

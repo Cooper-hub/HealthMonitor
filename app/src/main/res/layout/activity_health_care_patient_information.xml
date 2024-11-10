@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.HealthCarePatientInformation">
+
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/patientInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Patient Information"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/TRUBlue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"/>
+
+    <!-- Spinner to select a patient -->
+    <Spinner
+        android:id="@+id/patientSpinner"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="33dp"
+        android:background="@drawable/input_bg"
+        android:padding="16dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/displayPatientInfoButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/patientInfoTitle"
+        app:layout_constraintWidth_percent="0.7" />
+
+    <!-- Button to display selected patient's information -->
+    <Button
+        android:id="@+id/displayPatientInfoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Display Patient Info"
+        app:layout_constraintTop_toBottomOf="@id/patientSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input_bg"
+        android:textSize="14sp" />
+
+    <!-- TextView to display patient information -->
+    <TextView
+        android:id="@+id/patientInfoTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/displayPatientInfoButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:text="Patient information will appear here"
+        android:gravity="center_horizontal"
+        android:textColor="@color/TRUBlue"
+        android:textSize="18sp" />
+
+    <!-- Spinner to select a monitor -->
+    <Spinner
+        android:id="@+id/monitorSpinner"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="33dp"
+        android:background="@drawable/input_bg"
+        android:padding="16dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/displayMonitorInfoButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/patientInfoTextView"
+        app:layout_constraintWidth_percent="0.7" />
+
+    <!-- Button to display monitor information -->
+    <Button
+        android:id="@+id/displayMonitorInfoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Display Monitor Info"
+        app:layout_constraintTop_toBottomOf="@id/monitorSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input_bg"
+        android:textSize="14sp" />
+
+    <!-- LineChart to display monitor data -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/monitorChart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/displayMonitorInfoButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

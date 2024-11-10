@@ -265,7 +265,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
             }
         });
     }
-    private List<Class<?>> getDecoratorClasses() {
+    public static List<Class<?>> getDecoratorClasses() {
         List<Class<?>> decoratorClasses = new ArrayList<>();
         // Add the decorator classes manually to the list
         decoratorClasses.add(BloodPressureDecorator.class);

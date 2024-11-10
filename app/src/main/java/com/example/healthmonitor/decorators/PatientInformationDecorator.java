@@ -83,7 +83,7 @@ public class PatientInformationDecorator extends PatientDecorator {
                 .append("Medications: ").append(medications != null ? medications : "Not Available").append("\n")
                 .append("Surgeries: ").append(surgeries != null ? surgeries : "Not Available").append("\n")
                 .append("Family History: ").append(familyHistory != null ? familyHistory : "Not Available").append("\n")
-                .append("Vaccination Records: ").append(vaccinationRecords != null ? vaccinationRecords : "Not Available");
+                .append("Vaccination Records: ").append(vaccinationRecords != null ? vaccinationRecords : "Not Available").append("\n");
 
         return patient.getValue() + value.toString();
     }
