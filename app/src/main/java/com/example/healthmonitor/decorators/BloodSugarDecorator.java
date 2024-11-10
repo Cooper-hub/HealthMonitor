@@ -12,6 +12,6 @@ public class BloodSugarDecorator extends PatientDecorator {
 
     @Override
     public String getValue() {
-        return patient.getValue() + "BloodSugar: " + bloodSugar;
+        return patient.getValue() + "BloodSugar: " + bloodSugar +" ";
     }
 }

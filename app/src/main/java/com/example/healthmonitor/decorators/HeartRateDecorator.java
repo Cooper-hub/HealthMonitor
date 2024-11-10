@@ -11,6 +11,6 @@ public class HeartRateDecorator extends PatientDecorator {
 
     @Override
     public String getValue() {
-        return patient.getValue() + "HeartRate: "+ heartRate;
+        return patient.getValue() + "HeartRate: "+ heartRate+" ";
     }
 }

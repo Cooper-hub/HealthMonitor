@@ -10,6 +10,6 @@ public class BodyTemperatureDecorator extends PatientDecorator {
     }
     // add stuff for when we add a body temperature monitor
     public String getValue() {
-        return patient.getValue() + "BodyTemperature: "+ bodyTemperature;
+        return patient.getValue() + "BodyTemperature: "+ bodyTemperature+" ";
     }
 }

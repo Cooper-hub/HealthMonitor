@@ -10,6 +10,6 @@ public class BloodPressureDecorator extends PatientDecorator {
        super(patient);
     }
     public String getValue() {
-        return patient.getValue() + "BloodPressure: "+ bloodPressure;
+        return patient.getValue() + "BloodPressure: "+ bloodPressure +" ";
     }
 }

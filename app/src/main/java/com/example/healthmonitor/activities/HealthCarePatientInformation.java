@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,34 +72,61 @@ public class HealthCarePatientInformation extends AppCompatActivity {
             displayPatientInfo();
         });
     }
-
     private void setupChart() {
-        // Example array of strings representing the data
-        String[] monitorData = {"12", "15", "18", "20", "25", "28", "32"};
+        // Get the selected monitor (decorator) from the monitorSpinner
+        String selectedMonitor = monitorSpinner.getSelectedItem().toString();
+        String selectedPatientId = patientSpinner.getSelectedItem().toString();
 
-        // Convert the data into Entry objects for the chart
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < monitorData.length; i++) {
-            try {
-                float value = Float.parseFloat(monitorData[i]); // Convert the string to float
-                entries.add(new Entry(i, value)); // Add the entry to the chart's data
-            } catch (NumberFormatException e) {
-                e.printStackTrace(); // Handle invalid number format if needed
-            }
-        }
+        // Access Firestore to get the specific monitor data for the selected patient and monitor type
+        db.collection("monitors")
+                .document(selectedMonitor)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Retrieve the unique field name (assuming it is unknown in advance)
+                        Map<String, Object> monitorFields = documentSnapshot.getData();
+                        if (monitorFields != null && !monitorFields.isEmpty()) {
+                            // Retrieve the first field, which is assumed to be the data array
+                            String uniqueFieldName = monitorFields.keySet().iterator().next();
+                            List<String> monitorData = (List<String>) documentSnapshot.get(uniqueFieldName);
 
-        // Create a LineDataSet to hold the data
-        LineDataSet dataSet = new LineDataSet(entries, "Monitor Data");
-        dataSet.setColor(Color.BLUE); // Set line color
-        dataSet.setValueTextColor(Color.BLACK); // Set value text color
-        dataSet.setLineWidth(2f); // Set the line width
-        dataSet.setDrawValues(false); // Hide values on the chart points (optional)
+                            if (monitorData != null) {
+                                List<Entry> entries = new ArrayList<>();
+                                for (int i = 0; i < monitorData.size(); i++) {
+                                    try {
+                                        float value = Float.parseFloat(monitorData.get(i)); // Convert each data point to float
+                                        entries.add(new Entry(i, value)); // Add each entry for the chart
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace(); // Handle invalid number format if needed
+                                    }
+                                }
 
-        // Create LineData object and set it to the chart
-        LineData lineData = new LineData(dataSet);
-        monitorChart.setData(lineData);
-        monitorChart.invalidate(); // Refresh the chart
+                                // Create LineDataSet and populate the chart
+                                LineDataSet dataSet = new LineDataSet(entries, selectedMonitor + " Data");
+                                dataSet.setColor(Color.BLUE);
+                                dataSet.setValueTextColor(Color.BLACK);
+                                dataSet.setLineWidth(2f);
+                                dataSet.setDrawValues(false);
+
+                                LineData lineData = new LineData(dataSet);
+                                monitorChart.setData(lineData);
+                                monitorChart.invalidate(); // Refresh the chart
+                            } else {
+                                Toast.makeText(this, "No data found for selected monitor", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(this, "Monitor fields not found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Monitor data not found", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Failed to retrieve monitor data", Toast.LENGTH_SHORT).show();
+                });
     }
+
 
     private void fetchPatientData() {
         db.collection("users")  // Adjust this to your correct collection path

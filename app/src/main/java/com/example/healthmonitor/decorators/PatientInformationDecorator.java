@@ -78,12 +78,12 @@ public class PatientInformationDecorator extends PatientDecorator {
     public String getValue() {
         StringBuilder value = new StringBuilder();
 
-        value.append("Chronic Conditions: ").append(chronicConditions != null ? chronicConditions : "Not Available").append("\n")
-                .append("Allergies: ").append(allergies != null ? allergies : "Not Available").append("\n")
-                .append("Medications: ").append(medications != null ? medications : "Not Available").append("\n")
-                .append("Surgeries: ").append(surgeries != null ? surgeries : "Not Available").append("\n")
-                .append("Family History: ").append(familyHistory != null ? familyHistory : "Not Available").append("\n")
-                .append("Vaccination Records: ").append(vaccinationRecords != null ? vaccinationRecords : "Not Available").append("\n");
+        value.append("Chronic Conditions: ").append(chronicConditions != null ? chronicConditions : "Not Available ").append("\n")
+                .append("Allergies: ").append(allergies != null ? allergies : "Not Available ").append("\n")
+                .append("Medications: ").append(medications != null ? medications : "Not Available ").append("\n")
+                .append("Surgeries: ").append(surgeries != null ? surgeries : "Not Available ").append("\n")
+                .append("Family History: ").append(familyHistory != null ? familyHistory : "Not Available ").append("\n")
+                .append("Vaccination Records: ").append(vaccinationRecords != null ? vaccinationRecords : "Not Available ").append("\n");
 
         return patient.getValue() + value.toString();
     }
