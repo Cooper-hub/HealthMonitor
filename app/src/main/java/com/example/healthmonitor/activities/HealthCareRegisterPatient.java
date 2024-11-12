@@ -19,12 +19,12 @@ import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.healthmonitor.IPatient;
 import com.example.healthmonitor.decorators.PatientDecorator;
 import com.google.firebase.FirebaseApp;
 
 import com.example.healthmonitor.R;
 import com.example.healthmonitor.Patient;
-import com.example.healthmonitor.activities.LoginActivity;
 import com.example.healthmonitor.decorators.BloodPressureDecorator;
 import com.example.healthmonitor.decorators.BloodSugarDecorator;
 import com.example.healthmonitor.decorators.BodyTemperatureDecorator;

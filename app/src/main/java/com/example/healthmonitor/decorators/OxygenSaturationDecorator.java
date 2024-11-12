@@ -1,6 +1,6 @@
 package com.example.healthmonitor.decorators;
 
-import com.example.healthmonitor.activities.IPatient;
+import com.example.healthmonitor.IPatient;
 public class OxygenSaturationDecorator extends PatientDecorator {
 
     String oxygenSaturation;

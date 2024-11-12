@@ -1,4 +1,4 @@
-package com.example.healthmonitor.activities;
+package com.example.healthmonitor;
 
 public interface IPatient {
     String getValue();

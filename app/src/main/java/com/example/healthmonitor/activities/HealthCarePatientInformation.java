@@ -3,6 +3,7 @@ package com.example.healthmonitor.activities;
 import static com.example.healthmonitor.activities.HealthCareRegisterPatient.getDecoratorClasses;
 import static com.example.healthmonitor.activities.LoginActivity.loggedInUser;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +35,7 @@ import java.util.regex.*;
 public class HealthCarePatientInformation extends AppCompatActivity {
     private FirebaseFirestore db;
     private LineChart monitorChart;
-    private Button displayMonitorInfoButton, displayPatientInfoButton;
+    private Button displayMonitorInfoButton, displayPatientInfoButton, homeButton;
     private Spinner monitorSpinner, patientSpinner;
     private TextView patientInfoTextView;
 
@@ -49,6 +50,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         monitorChart = findViewById(R.id.monitorChart);
         displayMonitorInfoButton = findViewById(R.id.displayMonitorInfoButton);
         displayPatientInfoButton = findViewById(R.id.displayPatientInfoButton);
+        homeButton = findViewById(R.id.homeButton);
         monitorSpinner = findViewById(R.id.monitorSpinner);
         patientSpinner = findViewById(R.id.patientSpinner);
         patientInfoTextView = findViewById(R.id.patientInfoTextView);
@@ -70,6 +72,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         displayPatientInfoButton.setOnClickListener(v -> {
             // Fetch and display the full data of the selected patient
             displayPatientInfo();
+        });
+
+        homeButton.setOnClickListener(v -> {
+            Toast.makeText(HealthCarePatientInformation.this, "Returning home", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(HealthCarePatientInformation.this, HealthCareHomePage.class);
+            startActivity(intent);
         });
     }
     private void setupChart() {

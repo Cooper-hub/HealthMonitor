@@ -1,7 +1,6 @@
 package com.example.healthmonitor.decorators;
 
-import com.example.healthmonitor.Patient;
-import com.example.healthmonitor.activities.IPatient;
+import com.example.healthmonitor.IPatient;
 
 public class PatientDecorator implements IPatient {
     public IPatient patient;

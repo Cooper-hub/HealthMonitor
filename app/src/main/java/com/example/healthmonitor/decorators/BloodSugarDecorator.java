@@ -1,7 +1,6 @@
 package com.example.healthmonitor.decorators;
 
-import com.example.healthmonitor.activities.IPatient;
-import com.example.healthmonitor.decorators.PatientDecorator;
+import com.example.healthmonitor.IPatient;
 
 public class BloodSugarDecorator extends PatientDecorator {
 

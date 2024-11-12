@@ -1,10 +1,6 @@
 package com.example.healthmonitor;
 
-import com.example.healthmonitor.activities.IPatient;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Patient extends User implements IPatient{
     // Basic personal information collected from BC service card
