@@ -1,7 +1,7 @@
 package com.example.healthmonitor.activities;
 
 import static com.example.healthmonitor.activities.LoginActivity.loggedInUser;
-
+import static com.example.healthmonitor.activities.BasicPatientInfo.ppatient;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -49,7 +49,7 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
     private EditText emailEt, passwordEt, confirmPasswordEt, patientInfoEt;
     private Spinner patientSpinner, monitorSpinner;
     private Button setMonitorBtn, registerBtn;
-    private IPatient patient = new PatientDecorator(new Patient());
+    private IPatient patient = new PatientDecorator(ppatient);
 
     private String selectedField;
     private Map<String, Method> setterMethodMap;

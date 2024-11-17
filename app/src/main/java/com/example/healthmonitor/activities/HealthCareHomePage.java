@@ -18,7 +18,7 @@ public class HealthCareHomePage extends AppCompatActivity {
         Button unRegPatientBtn = findViewById(R.id.unRegPatientBtn);
 
         regPatientBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(HealthCareHomePage.this, HealthCareRegisterPatient.class);
+            Intent intent = new Intent(HealthCareHomePage.this, BasicPatientInfo.class);
             startActivity(intent);
         });
 
