@@ -113,7 +113,7 @@
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ReturnHome"
+        android:text="Return Home"
         android:textColor="@color/white"
         android:background="@drawable/input_bg"
         android:textSize="14sp"

@@ -55,7 +55,7 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
         patientSpinner = findViewById(R.id.patientSpinner);
 
         // Fetch patient data from Firestore
-        fetchPatientData();
+        fetchRegisteredPatients();
 
 
         // Returning back to the home of the Healthcare worker to perform more action
@@ -66,11 +66,11 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
 
         unregisterButton.setOnClickListener(view -> {
             unRegisterPatient();
-            fetchPatientData();
+            fetchRegisteredPatients();
         });
     }
 
-    private void fetchPatientData() {
+    private void fetchRegisteredPatients() {
         db.collection("users")  // Adjust this to your correct collection path
                 .get()
                 .addOnCompleteListener(task -> {

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.healthmonitor.MonitorDataCallback;
 import com.example.healthmonitor.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -32,13 +33,14 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.*;
+
 public class HealthCarePatientInformation extends AppCompatActivity {
     private FirebaseFirestore db;
     private LineChart monitorChart;
     private Button displayMonitorInfoButton, displayPatientInfoButton, homeButton;
     private Spinner monitorSpinner, patientSpinner;
     private TextView patientInfoTextView;
-
+    private String fullData;
     private String patientData;
 
     @Override
@@ -61,11 +63,11 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         fetchPatientData();
 
 
-
         // Button click listener to show monitor info
         displayMonitorInfoButton.setOnClickListener(v -> {
             // Call the method to set up and display the chart
             setupChart();
+            getLatestMonitorValue();
         });
 
         // Button click listener to display the selected patient's information
@@ -80,11 +82,10 @@ public class HealthCarePatientInformation extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
     private void setupChart() {
         // Get the selected monitor (decorator) from the monitorSpinner
         String selectedMonitor = monitorSpinner.getSelectedItem().toString();
-        String selectedPatientId = patientSpinner.getSelectedItem().toString();
-
         // Access Firestore to get the specific monitor data for the selected patient and monitor type
         db.collection("monitors")
                 .document(selectedMonitor)
@@ -163,6 +164,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                     }
                 });
     }
+
     private void displayPatientInfo() {
         // Get the selected patient ID from the spinner
         String selectedPatientId = patientSpinner.getSelectedItem().toString();
@@ -173,10 +175,10 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String fullData = documentSnapshot.getString("fullData");
+                        fullData = documentSnapshot.getString("fullData");
                         patientData = fullData;
                         if (fullData != null) {
-                            patientInfoTextView.setText(fullData);
+                            patientInfoTextView.setText(formatPatientInfo(fullData));
                             List<Class<?>> matchingDecorators = findDecoratorsInString(patientData);
                             Log.d("Spinner Data", "Decorator names: " + matchingDecorators.toString());
 
@@ -232,9 +234,6 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         return matchingDecorators;
     }
 
-
-
-
     private void fillMonitorSpinner(List<Class<?>> matchingDecorators) {
         List<String> decoratorNames = new ArrayList<>();
 
@@ -251,4 +250,89 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         monitorSpinner.setAdapter(adapter);
     }
 
+    public static String formatPatientInfo(String rawString) {
+        // Replace single-line formatting issues with proper line breaks
+        return rawString
+                .replace("Patient Info: ", "Patient Info:\n")
+                .replace("DateOfBirth: ", "  Date of Birth: ")
+                .replace("Gender: ", "\n  Gender: ")
+                .replace("Height: ", "\n  Height: ")
+                .replace("Weight: ", "\n  Weight: ")
+                .replace("Chronic Conditions: ", "\n  Chronic Conditions: ")
+                .replace("Allergies: ", "\n  Allergies: ")
+                .replace("Medications: ", "\n  Medications: ")
+                .replace("Surgeries: ", "\n  Surgeries: ")
+                .replace("Family History: ", "\n  Family History: ")
+                .replace("Vaccination Records: ", "\n  Vaccination Records: ")
+                .replace("BloodPressure: ", "\n  Blood Pressure: ")
+                .replace("HeartRate: ", "\n  Heart Rate: ")
+                .replace("BloodSugar: ", "\n  Blood Sugar: ")
+                .replace("OxygenSaturation: ", "\n  Oxygen Saturation: ");
+    }
+
+    private void getLatestMonitorValue() {
+        String selectedMonitor = monitorSpinner.getSelectedItem().toString();
+        String selectedPatientId = patientSpinner.getSelectedItem().toString();
+
+        String processedMonitor = selectedMonitor.endsWith("Decorator")
+                ? selectedMonitor.substring(0, selectedMonitor.length() - "Decorator".length())
+                : selectedMonitor;
+
+        getCurrentMonitorValue(value -> {
+            // This code runs once the monitor data is retrieved
+            Log.d("MonitorValue",processedMonitor+  ": " + value);
+
+            // Replace the monitor value in fullData
+            String updatedFullData = fullData.replaceAll(
+                    "(?i)" + processedMonitor + ":\\s*\\S*",
+                    processedMonitor + ": " + value);
+
+            Log.d("New FullData", updatedFullData);
+
+            // Update Firestore with the new fullData
+            db.collection("users")
+                    .document(selectedPatientId)
+                    .update("fullData", updatedFullData)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Monitor data updated successfully", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to update monitor data", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    });
+        });
+    }
+
+    private void getCurrentMonitorValue(MonitorDataCallback callback) {
+        // Get the selected monitor (decorator) from the monitorSpinner
+        String selectedMonitor = monitorSpinner.getSelectedItem().toString();
+
+        // Access Firestore to get the specific monitor data for the selected patient and monitor type
+        db.collection("monitors")
+                .document(selectedMonitor)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Retrieve the unique field name (assuming it is unknown in advance)
+                        Map<String, Object> monitorFields = documentSnapshot.getData();
+                        if (monitorFields != null && !monitorFields.isEmpty()) {
+                            // Retrieve the first field, which is assumed to be the data array
+                            String uniqueFieldName = monitorFields.keySet().iterator().next();
+                            List<String> monitorData = (List<String>) documentSnapshot.get(uniqueFieldName);
+                            callback.onCallback(monitorData.get(0));
+                        } else {
+                            Toast.makeText(this, "Monitor fields not found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Monitor data not found", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Failed to retrieve monitor data", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
 }
+
