@@ -63,9 +63,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
         android:text="Patient information will appear here"
-        android:gravity="center_horizontal"
+        android:gravity="start"
         android:textColor="@color/TRUBlue"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <!-- Spinner to select a monitor -->
     <Spinner
@@ -98,13 +98,12 @@
         android:background="@drawable/input_bg"
         android:textSize="14sp" />
 
-    <!-- LineChart to display monitor data -->
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/monitorChart"
         android:layout_width="369dp"
         android:layout_height="202dp"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/homeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/displayMonitorInfoButton" />
@@ -117,7 +116,7 @@
         android:textColor="@color/white"
         android:background="@drawable/input_bg"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/monitorChart"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"

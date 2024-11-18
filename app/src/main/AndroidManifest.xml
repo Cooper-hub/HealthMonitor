@@ -14,6 +14,9 @@
         android:theme="@style/Theme.HealthMonitor"
         tools:targetApi="31">
         <activity
+            android:name=".activities.PatientDataDisplay"
+            android:exported="false" />
+        <activity
             android:name=".activities.BasicPatientInfo"
             android:exported="false" />
         <activity
@@ -33,9 +36,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.PatientRequestAid"
-            android:exported="false" />
-        <activity
-            android:name=".activities.PatientDataDisplay"
             android:exported="false" />
         <activity
             android:name=".activities.HealthCareHomePage"

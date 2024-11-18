@@ -9,43 +9,23 @@
     tools:context=".activities.PatientHomePage">
 
     <Button
-        android:id="@+id/help_btn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/input_bg"
-        android:backgroundTint="#FF0000"
-        android:padding="24dp"
-
-
-        android:shadowColor="@color/white"
-        android:text="@string/request_help"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/request_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.8" />
-
-    <Button
         android:id="@+id/request_btn"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
         android:background="@drawable/input_bg"
-        android:shadowColor="@color/white"
-        android:textColor="@color/white"
         android:backgroundTint="@color/TRUTeal"
-        android:text="@string/view_live_data"
-        android:textSize="24sp"
         android:padding="24dp"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintHeight_percent="0.2"
-        app:layout_constraintTop_toBottomOf="@id/help_btn"
-        app:layout_constraintStart_toStartOf="parent"
+        android:shadowColor="@color/white"
+        android:text="View Data"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.476"
+        app:layout_constraintWidth_percent="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
