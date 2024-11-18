@@ -20,15 +20,26 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * RegisterActivity handles the user registration process for health care workers.
+ * It includes fields for entering an email and password and verifies the data before
+ * creating a new account. Upon successful registration, it adds the health care worker
+ * to the Firestore database and redirects to the LoginActivity.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
-
     protected EditText emailEt;
     protected EditText passwordEt;
     public FirebaseFirestore db;
 
-
+    /**
+     * Called when the activity is created. Initializes the necessary components, such
+     * as the Firebase authentication system, Firestore instance, and UI elements.
+     * Sets up click listeners for the registration and login buttons.
+     *
+     * @param savedInstanceState a Bundle containing the activity's previous state, if any
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,19 +54,22 @@ public class RegisterActivity extends AppCompatActivity {
         Button loginBtn = findViewById(R.id.alreadyHaveAccount);
         Button signUpBtn = findViewById(R.id.Registerbtn);
 
+        // Set up the sign-up button to create a user account
         signUpBtn.setOnClickListener(view -> {
             String email = emailEt.getText().toString();
             String password = passwordEt.getText().toString();
 
+            // Check if the email and password fields are empty
             if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                 Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_LONG).show();
             } else {
+                // Create a new user with Firebase authentication
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Log.d("Test", "Next activity started: ");
                         Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
                         addHealthCareWorkerToDB();
-                        Intent intent = new Intent(this, LoginActivity.class);//changed to spage
+                        Intent intent = new Intent(this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -65,12 +79,18 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // Set up the login button to navigate to the login screen
         loginBtn.setOnClickListener(view -> {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         });
     }
+
+    /**
+     * Adds the newly registered health care worker to the Firestore database by creating
+     * an empty document in the "users" collection with the email as the document ID.
+     */
     private void addHealthCareWorkerToDB() {
         String email = emailEt.getText().toString();
         if (!TextUtils.isEmpty(email)) {

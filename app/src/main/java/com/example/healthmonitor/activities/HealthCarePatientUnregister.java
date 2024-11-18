@@ -24,26 +24,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Activity for unregistering patients assigned to a healthcare worker.
+ * This activity allows the healthcare worker to:
+ * - View the list of assigned patients.
+ * - Unregister a selected patient.
+ * - Navigate back to the healthcare worker's home page.
+ */
 public class HealthCarePatientUnregister extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Spinner patientSpinner;
     private Button unregisterButton, returnHomeButton;
 
+    /**
+     * Initializes the activity, sets up the UI, and fetches patient data from Firestore.
+     *
+     * @param savedInstanceState the saved state of the activity, if any.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_health_care_patient_unregister);
+
+        // Set up window insets for edge-to-edge display
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Now initialize the views after calling setContentView
+        // Initialize views
         unregisterButton = findViewById(R.id.unregisterButton);
         returnHomeButton = findViewById(R.id.returnHomeButton);
         patientSpinner = findViewById(R.id.patientSpinner);
@@ -51,14 +63,10 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Initialize the Spinner
-        patientSpinner = findViewById(R.id.patientSpinner);
-
-        // Fetch patient data from Firestore
+        // Fetch and display registered patients
         fetchRegisteredPatients();
 
-
-        // Returning back to the home of the Healthcare worker to perform more action
+        // Set up button listeners
         returnHomeButton.setOnClickListener(view -> {
             Intent intent = new Intent(HealthCarePatientUnregister.this, HealthCareHomePage.class);
             startActivity(intent);
@@ -70,6 +78,10 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches the list of patients assigned to the currently logged-in healthcare worker
+     * from Firestore and populates the spinner with their names.
+     */
     private void fetchRegisteredPatients() {
         db.collection("users")  // Adjust this to your correct collection path
                 .get()
@@ -98,6 +110,10 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Unregisters the selected patient by removing the healthcare worker assignment
+     * in Firestore.
+     */
     private void unRegisterPatient() {
         // Get the selected patient ID from the spinner
         String selectedPatientId = patientSpinner.getSelectedItem().toString();
@@ -107,7 +123,7 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
                     .document(selectedPatientId)
                     .update("healthcareWorker", null)
                     .addOnSuccessListener(aVoid -> {
-                         Toast.makeText(HealthCarePatientUnregister.this, "Patient unregistered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HealthCarePatientUnregister.this, "Patient unregistered", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
                         // Handle failure
@@ -115,5 +131,5 @@ public class HealthCarePatientUnregister extends AppCompatActivity {
                     });
         }
     }
-
 }
+

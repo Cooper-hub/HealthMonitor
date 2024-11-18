@@ -1,6 +1,6 @@
 package com.example.healthmonitor.activities;
-import android.content.Intent;
 
+import android.content.Intent;
 import com.example.healthmonitor.R;
 import com.example.healthmonitor.User;
 import com.google.firebase.FirebaseApp;
@@ -11,20 +11,40 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * LoginActivity handles user login for both medical professionals and patients.
+ * It allows users to log in using Firebase Authentication and directs them to
+ * the appropriate home page based on their email domain.
+ */
 public class LoginActivity extends AppCompatActivity {
+
+    /** Firebase Authentication instance */
     public FirebaseAuth auth;
+
+    /** Currently logged-in user */
     public static User loggedInUser = new User();
+
+    /** EditText for entering email */
     protected EditText emailEt;
+
+    /** EditText for entering password */
     protected EditText passwordEt;
+
+    /** User's email */
     protected String email;
+
+    /** User's password */
     protected String password;
 
+    /**
+     * Called when the activity is first created. Initializes the UI elements,
+     * sets up listeners for the login and registration buttons, and handles login functionality.
+     *
+     * @param savedInstanceState a Bundle containing the activity's previous state, if any
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FirebaseApp.initializeApp(this);
@@ -54,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
 
             loggedInUser.setContactInformation(email);
             loggedInUser.setPassword(password);
-
 
             if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                 Toast.makeText(LoginActivity.this, "Please fill all the fields", Toast.LENGTH_LONG).show();

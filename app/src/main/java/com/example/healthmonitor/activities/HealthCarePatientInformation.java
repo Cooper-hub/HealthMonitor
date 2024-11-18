@@ -34,6 +34,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.*;
 
+/**
+ * This activity displays healthcare patient information and monitor data.
+ * It fetches patient and monitor data from Firestore and populates UI components
+ * such as spinners and charts for user interaction.
+ */
 public class HealthCarePatientInformation extends AppCompatActivity {
     private FirebaseFirestore db;
     private LineChart monitorChart;
@@ -43,6 +48,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
     private String fullData;
     private String patientData;
 
+    /**
+     * Called when the activity is first created. Sets up UI components and initializes Firestore.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this contains the most recent data supplied in {@link #onSaveInstanceState}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,20 +73,16 @@ public class HealthCarePatientInformation extends AppCompatActivity {
 
         fetchPatientData();
 
-
         // Button click listener to show monitor info
         displayMonitorInfoButton.setOnClickListener(v -> {
-            // Call the method to set up and display the chart
             setupChart(monitorChart, monitorSpinner.getSelectedItem().toString());
-            getLatestMonitorValue(monitorSpinner.getSelectedItem().toString(),patientSpinner.getSelectedItem().toString());
+            getLatestMonitorValue(monitorSpinner.getSelectedItem().toString(), patientSpinner.getSelectedItem().toString());
         });
 
         // Button click listener to display the selected patient's information
-        displayPatientInfoButton.setOnClickListener(v -> {
-            // Fetch and display the full data of the selected patient
-            displayPatientInfo(patientSpinner.getSelectedItem().toString(), patientInfoTextView);
-        });
+        displayPatientInfoButton.setOnClickListener(v -> displayPatientInfo(patientSpinner.getSelectedItem().toString(), patientInfoTextView));
 
+        // Navigate back to the home page
         homeButton.setOnClickListener(v -> {
             Toast.makeText(HealthCarePatientInformation.this, "Returning home", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(HealthCarePatientInformation.this, HealthCareHomePage.class);
@@ -83,17 +90,20 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up and populates a chart with monitor data for a selected monitor.
+     *
+     * @param monitorChart    The LineChart view to populate.
+     * @param selectedMonitor The name of the monitor to display data for.
+     */
     protected void setupChart(LineChart monitorChart, String selectedMonitor) {
-        // Access Firestore to get the specific monitor data for the selected patient and monitor type
         db.collection("monitors")
                 .document(selectedMonitor)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Retrieve the unique field name (assuming it is unknown in advance)
                         Map<String, Object> monitorFields = documentSnapshot.getData();
                         if (monitorFields != null && !monitorFields.isEmpty()) {
-                            // Retrieve the first field, which is assumed to be the data array
                             String uniqueFieldName = monitorFields.keySet().iterator().next();
                             List<String> monitorData = (List<String>) documentSnapshot.get(uniqueFieldName);
 
@@ -101,14 +111,13 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                                 List<Entry> entries = new ArrayList<>();
                                 for (int i = 0; i < monitorData.size(); i++) {
                                     try {
-                                        float value = Float.parseFloat(monitorData.get(i)); // Convert each data point to float
-                                        entries.add(new Entry(i, value)); // Add each entry for the chart
+                                        float value = Float.parseFloat(monitorData.get(i));
+                                        entries.add(new Entry(i, value));
                                     } catch (NumberFormatException e) {
-                                        e.printStackTrace(); // Handle invalid number format if needed
+                                        e.printStackTrace();
                                     }
                                 }
 
-                                // Create LineDataSet and populate the chart
                                 LineDataSet dataSet = new LineDataSet(entries, selectedMonitor + " Data");
                                 dataSet.setColor(Color.BLUE);
                                 dataSet.setValueTextColor(Color.BLACK);
@@ -117,7 +126,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
 
                                 LineData lineData = new LineData(dataSet);
                                 monitorChart.setData(lineData);
-                                monitorChart.invalidate(); // Refresh the chart
+                                monitorChart.invalidate();
                             } else {
                                 Toast.makeText(this, "No data found for selected monitor", Toast.LENGTH_SHORT).show();
                             }
@@ -133,8 +142,13 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                     Toast.makeText(this, "Failed to retrieve monitor data", Toast.LENGTH_SHORT).show();
                 });
     }
+
+    /**
+     * Fetches the list of patients associated with the logged-in healthcare worker.
+     * Populates the patient spinner with patient IDs.
+     */
     protected void fetchPatientData() {
-        db.collection("users")  // Adjust this to your correct collection path
+        db.collection("users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -149,20 +163,23 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                                 }
                             }
 
-                            // Populate the Spinner with patient names
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, patientNames);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             patientSpinner.setAdapter(adapter);
                         }
                     } else {
-                        // Handle error
                         task.getException().printStackTrace();
                     }
                 });
     }
 
+    /**
+     * Displays the full information of a selected patient.
+     *
+     * @param selectedPatientId   The ID of the selected patient.
+     * @param patientInfoTextView The TextView to display the patient information.
+     */
     protected void displayPatientInfo(String selectedPatientId, TextView patientInfoTextView) {
-        // Fetch the full data of the selected patient from Firestore
         db.collection("users")
                 .document(selectedPatientId)
                 .get()
@@ -173,25 +190,25 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                         if (fullData != null) {
                             patientInfoTextView.setText(formatPatientInfo(fullData));
                             List<Class<?>> matchingDecorators = findDecoratorsInString(patientData);
-                            Log.d("Spinner Data", "Decorator names: " + matchingDecorators.toString());
-
-                            fillMonitorSpinner(matchingDecorators,monitorSpinner);
+                            fillMonitorSpinner(matchingDecorators, monitorSpinner);
                         } else {
-
                             Toast.makeText(this, "No Data found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        // Handle case where the document does not exist
                         Toast.makeText(this, "Patient not found", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Handle failure
                     e.printStackTrace();
                     Toast.makeText(this, "Failed to retrieve data", Toast.LENGTH_SHORT).show();
                 });
     }
 
+    /**
+     * Searches through a string and returns decorators within.
+     *
+     * @param String input the string to be searched
+     */
     public static List<Class<?>> findDecoratorsInString(String input) {
         List<Class<?>> matchingDecorators = new ArrayList<>();
 
@@ -227,6 +244,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         return matchingDecorators;
     }
 
+    /**
+     * Populates the provided spinner with names of matching decorators.
+     *
+     * @param matchingDecorators a list of decorator classes to be displayed in the spinner.
+     * @param monitorSpinner     the Spinner UI element to be populated.
+     */
     protected void fillMonitorSpinner(List<Class<?>> matchingDecorators, Spinner monitorSpinner) {
         List<String> decoratorNames = new ArrayList<>();
 
@@ -243,6 +266,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         monitorSpinner.setAdapter(adapter);
     }
 
+    /**
+     * Formats the raw patient information string for better readability.
+     *
+     * @param rawString the raw patient information string.
+     * @return the formatted patient information string with proper line breaks and indentation.
+     */
     protected static String formatPatientInfo(String rawString) {
         // Replace single-line formatting issues with proper line breaks
         return rawString
@@ -263,6 +292,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                 .replace("OxygenSaturation: ", "\n  Oxygen Saturation: ");
     }
 
+    /**
+     * Retrieves the latest value of a selected monitor for a specific patient and updates Firestore with the new data.
+     *
+     * @param selectedMonitor   the monitor type (e.g., "BloodPressure") selected by the user.
+     * @param selectedPatientId the unique ID of the selected patient.
+     */
     protected void getLatestMonitorValue(String selectedMonitor, String selectedPatientId) {
         String processedMonitor = selectedMonitor.endsWith("Decorator")
                 ? selectedMonitor.substring(0, selectedMonitor.length() - "Decorator".length())
@@ -270,7 +305,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
 
         getCurrentMonitorValue(value -> {
             // This code runs once the monitor data is retrieved
-            Log.d("MonitorValue",processedMonitor+  ": " + value);
+            Log.d("MonitorValue", processedMonitor + ": " + value);
 
             // Replace the monitor value in fullData
             String updatedFullData = fullData.replaceAll(
@@ -293,6 +328,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
         }, monitorSpinner.getSelectedItem().toString());
     }
 
+    /**
+     * Fetches the current value of a monitor from Firestore and passes it to a callback.
+     *
+     * @param callback        the callback interface to handle the retrieved monitor data.
+     * @param selectedMonitor the selected monitor type whose data needs to be fetched.
+     */
     protected void getCurrentMonitorValue(MonitorDataCallback callback, String selectedMonitor) {
         // Access Firestore to get the specific monitor data for the selected patient and monitor type
         db.collection("monitors")
@@ -319,7 +360,5 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                     Toast.makeText(this, "Failed to retrieve monitor data", Toast.LENGTH_SHORT).show();
                 });
     }
-
-
 }
 

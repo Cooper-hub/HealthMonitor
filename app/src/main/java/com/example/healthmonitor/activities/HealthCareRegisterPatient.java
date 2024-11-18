@@ -44,7 +44,13 @@ import java.util.Map;
 import java.util.HashMap;
 
 
-
+/**
+ * Handles the registration of patients and their health monitors in the HealthCare app.
+ * Provides functionality for:
+ * - Registering patients with email and password using Firebase Authentication.
+ * - Adding patient details and monitors to Firestore.
+ * - Dynamically managing patient attributes and health monitor decorators.
+ */
 public class HealthCareRegisterPatient extends AppCompatActivity {
     private EditText emailEt, passwordEt, confirmPasswordEt, patientInfoEt;
     private Spinner patientSpinner, monitorSpinner;
@@ -57,7 +63,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
     public FirebaseAuth auth;
 
     public FirebaseFirestore db;
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_health_care_register_patient);
@@ -126,6 +131,10 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         });
     }
 
+        /**
+         * Populates the patient attribute spinner with fields from PatientInformationDecorator.
+         * Configures its behavior to save field values entered by the user.
+         */
         private void populatePatientSpinner() {
         List<String> fieldNames = new ArrayList<>();
 
@@ -151,7 +160,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         patientSpinner.setAdapter(adapter);
 
         patientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedField = fieldNames.get(position);
 
@@ -162,7 +170,6 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
                 }
             }
 
-            @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 patientInfoEt.setText("");
             }
@@ -170,6 +177,12 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
 
     }
 
+    /**
+     * Formats a field name by inserting spaces before uppercase letters.
+     *
+     * @param fieldName the original field name.
+     * @return the formatted field name.
+     */
     private String formatFieldName(String fieldName) {
         StringBuilder formattedName = new StringBuilder();
         for (char c : fieldName.toCharArray()) {
@@ -181,6 +194,9 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         return formattedName.toString().trim();
     }
 
+    /**
+     * Saves the value entered in the EditText field to the corresponding patient attribute.
+     */
     private void saveFieldValue() {
         try {
             // Get the input value from the EditText field
@@ -209,6 +225,14 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         }
     }
 
+    /**
+     * Converts the input value from a string to the specified field type.
+     *
+     * @param inputValue the input value as a string
+     * @param fieldType the target type to which the input value should be converted
+     * @return the converted value as an object, or {@code null} if the type is unsupported
+     * @throws NumberFormatException if the input value cannot be converted to a numeric type
+     */
     private Object convertValue(String inputValue, Class<?> fieldType) {
         if (fieldType == List.class) {
             // Handle conversion to a List<String> more specifically
@@ -228,6 +252,10 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Populates the monitor spinner with available decorator classes and sets up
+     * event listeners for item selection and monitor addition.
+     */
     private void populateMonitorSpinner() {
         List<String> monitorNames = new ArrayList<>();
         List<Class<?>> decoratorClasses = getDecoratorClasses();
@@ -265,6 +293,12 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Retrieves a list of available decorator classes for monitors.
+     *
+     * @return a list of {@link Class} objects representing the decorator classes
+     */
     public static List<Class<?>> getDecoratorClasses() {
         List<Class<?>> decoratorClasses = new ArrayList<>();
         // Add the decorator classes manually to the list
@@ -275,6 +309,10 @@ public class HealthCareRegisterPatient extends AppCompatActivity {
         decoratorClasses.add(OxygenSaturationDecorator.class);
         return decoratorClasses;
     }
+    /**
+     * Adds the selected patient to the healthcare worker's list of observed patients
+     * in the database.
+     */
     private void addPatientToHealthCareWorker() {
         String patientEmail = emailEt.getText().toString();
 

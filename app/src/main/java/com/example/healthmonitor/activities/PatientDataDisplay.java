@@ -35,19 +35,45 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * PatientDataDisplay is responsible for displaying and updating patient information
+ * and monitor data. It retrieves patient details from Firestore and allows interaction
+ * with monitor data by updating it in real-time based on user input.
+ */
 public class PatientDataDisplay extends HealthCarePatientInformation {
+
+    /** Firebase Firestore instance */
     private FirebaseFirestore db;
+
+    /** LineChart for displaying monitor data */
     private LineChart monitorChart;
+
+    /** Buttons for displaying monitor info, patient info, and navigating to home */
     private Button displayMonitorInfoButton, displayPatientInfoButton, homeButton;
+
+    /** Spinner for selecting monitor type */
     private Spinner monitorSpinner;
+
+    /** TextView for displaying patient information */
     private TextView patientInfoTextView;
+
+    /** Full data string of the selected patient */
     private String fullData;
+
+    /** Patient data string */
     private String patientData;
 
+    /**
+     * Called when the activity is first created. Initializes the views, sets up
+     * listeners for buttons, and initializes Firebase Firestore for data retrieval
+     * and updates.
+     *
+     * @param savedInstanceState a Bundle containing the activity's previous state, if any
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_data_display); // Only call this once
+        setContentView(R.layout.activity_patient_data_display);
 
         // Initialize views
         monitorChart = findViewById(R.id.monitorChart);
@@ -63,7 +89,7 @@ public class PatientDataDisplay extends HealthCarePatientInformation {
         displayMonitorInfoButton.setOnClickListener(v -> {
             // Call the method to set up and display the chart
             setupChart(monitorChart, monitorSpinner.getSelectedItem().toString());
-            getLatestMonitorValue(monitorSpinner.getSelectedItem().toString(),loggedInUser.getContactInformation());
+            getLatestMonitorValue(monitorSpinner.getSelectedItem().toString(), loggedInUser.getContactInformation());
         });
 
         // Button click listener to display the selected patient's information
@@ -73,6 +99,13 @@ public class PatientDataDisplay extends HealthCarePatientInformation {
         });
     }
 
+    /**
+     * Fetches and displays the full data of the selected patient from Firestore.
+     * Updates the monitor spinner with available data and formats the patient info.
+     *
+     * @param selectedPatientId the unique identifier for the selected patient
+     * @param patientInfoTextView the TextView to display the patient's information
+     */
     protected void displayPatientInfo(String selectedPatientId, TextView patientInfoTextView) {
         // Fetch the full data of the selected patient from Firestore
         db.collection("users")
@@ -87,9 +120,8 @@ public class PatientDataDisplay extends HealthCarePatientInformation {
                             List<Class<?>> matchingDecorators = findDecoratorsInString(patientData);
                             Log.d("Spinner Data", "Decorator names: " + matchingDecorators.toString());
 
-                            fillMonitorSpinner(matchingDecorators,monitorSpinner);
+                            fillMonitorSpinner(matchingDecorators, monitorSpinner);
                         } else {
-
                             Toast.makeText(this, "No Data found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -103,23 +135,34 @@ public class PatientDataDisplay extends HealthCarePatientInformation {
                     Toast.makeText(this, "Failed to retrieve data", Toast.LENGTH_SHORT).show();
                 });
     }
+
+    /**
+     * Fetches the latest monitor value and updates the patient's full data in Firestore.
+     * It processes the monitor name, retrieves the current value, and replaces the old value
+     * in the full data string before updating the Firestore document.
+     *
+     * @param selectedMonitor the selected monitor's name
+     * @param selectedPatientId the unique identifier for the selected patient
+     */
     protected void getLatestMonitorValue(String selectedMonitor, String selectedPatientId) {
+        // Process the monitor name to remove the "Decorator" suffix if present
         String processedMonitor = selectedMonitor.endsWith("Decorator")
                 ? selectedMonitor.substring(0, selectedMonitor.length() - "Decorator".length())
                 : selectedMonitor;
 
+        // Fetch current monitor value
         getCurrentMonitorValue(value -> {
-            // This code runs once the monitor data is retrieved
-            Log.d("MonitorValue",processedMonitor+  ": " + value);
+            // Log the new monitor value
+            Log.d("MonitorValue", processedMonitor + ": " + value);
 
-            // Replace the monitor value in fullData
+            // Replace the monitor value in the full data string
             String updatedFullData = fullData.replaceAll(
                     "(?i)" + processedMonitor + ":\\s*\\S*",
                     processedMonitor + ": " + value);
 
             Log.d("New FullData", updatedFullData);
 
-            // Update Firestore with the new fullData
+            // Update Firestore with the new full data
             db.collection("users")
                     .document(selectedPatientId)
                     .update("fullData", updatedFullData)
