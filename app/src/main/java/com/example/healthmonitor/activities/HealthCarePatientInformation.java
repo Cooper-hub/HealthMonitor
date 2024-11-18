@@ -319,7 +319,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                     .document(selectedPatientId)
                     .update("fullData", updatedFullData)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Monitor data updated successfully", Toast.LENGTH_SHORT).show();
+                        evaluatePatientCondition(selectedMonitor, Float.parseFloat(value));
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(this, "Failed to update monitor data", Toast.LENGTH_SHORT).show();
@@ -350,6 +350,43 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                             callback.onCallback(monitorData.get(0));
                         } else {
                             Toast.makeText(this, "Monitor fields not found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Monitor data not found", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Failed to retrieve monitor data", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     *  Evaluates the most recent value of the monitor and allerts the healthcare worker if
+     *  the value is outside the safe range.
+     *
+     * @param currentValue the value to be compared to the thresholds
+     * @param selectedMonitor the selected monitor type whose data needs to be fetched.
+     */
+    private void evaluatePatientCondition(String selectedMonitor, float currentValue) {
+        // Access Firestore to get the specific monitor data for the selected patient and monitor type
+        db.collection("monitordetails")
+                .document(selectedMonitor)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Retrieve the thresholds
+                        Double lowerThresh = documentSnapshot.getDouble("lowerthresh");
+                        Double upperThresh = documentSnapshot.getDouble("upperthresh");
+                        Log.d("lower threshold", String.valueOf(lowerThresh));
+                        Log.d("upper threshold", String.valueOf(upperThresh));
+                        if (lowerThresh != null && upperThresh != null) {
+                            // Check if the current value is within the thresholds
+                            if (currentValue < lowerThresh || currentValue > upperThresh) {
+                                Toast.makeText(this, "Warning: Monitor detects an unsafe value patient in need of help!", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(this, "Thresholds not found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(this, "Monitor data not found", Toast.LENGTH_SHORT).show();
