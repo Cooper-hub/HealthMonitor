@@ -56,7 +56,7 @@
         android:backgroundTint="@color/TRUTeal"
         android:padding="24dp"
         android:shadowColor="@color/white"
-        android:text="@string/view_patient_list_assign_monitor"
+        android:text="View Patients"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"

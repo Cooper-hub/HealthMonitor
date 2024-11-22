@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def sdkDir = properties.getProperty('sdk.dir')
 
 android {
     namespace 'com.example.healthmonitor'
@@ -14,10 +17,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
-            options.addStringOption('classpath', file(android.getSdkDirectory() + '/platforms/android-' + android.compileSdkVersion + '/android.jar'))
-        }
     }
 
     buildTypes {
@@ -27,20 +26,21 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
     }
+    buildToolsVersion '35.0.0'
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment:2.8.3'
-    implementation 'androidx.navigation:navigation-ui:2.8.3'
+    implementation 'androidx.navigation:navigation-fragment:2.8.4'
+    implementation 'androidx.navigation:navigation-ui:2.8.4'
     implementation 'com.google.firebase:firebase-database:21.0.0'
     implementation 'androidx.activity:activity:1.9.3'
     testImplementation 'junit:junit:4.13.2'
@@ -49,4 +49,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:23.1.0'
     implementation 'com.google.firebase:firebase-firestore:25.1.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation files(sdkDir + '/platforms/android-35/android.jar')
 }

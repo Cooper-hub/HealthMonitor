@@ -105,6 +105,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                         Map<String, Object> monitorFields = documentSnapshot.getData();
                         if (monitorFields != null && !monitorFields.isEmpty()) {
                             String uniqueFieldName = monitorFields.keySet().iterator().next();
+                            Log.d("FieldName", "Unique field name: " + uniqueFieldName);
                             List<String> monitorData = (List<String>) documentSnapshot.get(uniqueFieldName);
 
                             if (monitorData != null) {
@@ -319,7 +320,7 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                     .document(selectedPatientId)
                     .update("fullData", updatedFullData)
                     .addOnSuccessListener(aVoid -> {
-                        evaluatePatientCondition(selectedMonitor, Float.parseFloat(value));
+//                        evaluatePatientCondition(selectedMonitor, Float.parseFloat(value));
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(this, "Failed to update monitor data", Toast.LENGTH_SHORT).show();
