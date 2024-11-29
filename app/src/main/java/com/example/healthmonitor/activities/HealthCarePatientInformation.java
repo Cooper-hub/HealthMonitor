@@ -314,13 +314,12 @@ public class HealthCarePatientInformation extends AppCompatActivity {
                     processedMonitor + ": " + value);
 
             Log.d("New FullData", updatedFullData);
-
+            evaluatePatientCondition(selectedMonitor, Float.parseFloat(value));
             // Update Firestore with the new fullData
             db.collection("users")
                     .document(selectedPatientId)
                     .update("fullData", updatedFullData)
                     .addOnSuccessListener(aVoid -> {
-//                        evaluatePatientCondition(selectedMonitor, Float.parseFloat(value));
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(this, "Failed to update monitor data", Toast.LENGTH_SHORT).show();
